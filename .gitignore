@@ -1,0 +1,70 @@
+andwritten digit recognition using the MNIST dataset is a classic machine learning project that demonstrates the power of neural networks. The MNIST dataset consists of a large collection of 28x28 pixel grayscale images of handwritten digits (0-9) along with their corresponding labels. The goal is to build a neural network model that can accurately classify these handwritten digits.
+
+Here's a step-by-step guide to creating a handwritten digit recognition system using Python and neural networks in a Jupyter Notebook:
+
+Import Libraries:
+
+python
+Copy code
+import numpy as np
+import tensorflow as tf
+from tensorflow import keras
+import matplotlib.pyplot as plt
+Load the MNIST Dataset:
+
+python
+Copy code
+(train_images, train_labels), (test_images, test_labels) = keras.datasets.mnist.load_data()
+Data Preprocessing:
+
+Reshape and normalize the pixel values to the range [0, 1].
+Convert labels to one-hot encoded format.
+python
+Copy code
+train_images = train_images.reshape((-1, 28, 28, 1)) / 255.0
+test_images = test_images.reshape((-1, 28, 28, 1)) / 255.0
+train_labels = keras.utils.to_categorical(train_labels, 10)
+test_labels = keras.utils.to_categorical(test_labels, 10)
+Build the Neural Network Model:
+
+python
+Copy code
+model = keras.Sequential([
+    keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+    keras.layers.MaxPooling2D((2, 2)),
+    keras.layers.Flatten(),
+    keras.layers.Dense(128, activation='relu'),
+    keras.layers.Dense(10, activation='softmax')
+])
+Compile the Model:
+
+python
+Copy code
+model.compile(optimizer='adam',
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+Train the Model:
+
+python
+Copy code
+model.fit(train_images, train_labels, epochs=5, batch_size=64)
+Evaluate the Model:
+
+python
+Copy code
+test_loss, test_accuracy = model.evaluate(test_images, test_labels)
+print(f"Test Accuracy: {test_accuracy}")
+Make Predictions:
+
+python
+Copy code
+predictions = model.predict(test_images)
+Visualization:
+You can visualize the test images and their corresponding predicted labels to see how well the model performs.
+
+python
+Copy code
+for i in range(10):
+    plt.imshow(test_images[i].reshape(28, 28), cmap='gray')
+    plt.title(f"True: {np.argmax(test_labels[i])}, Predicted: {np.argmax(predictions[i])}")
+    plt.show()
